@@ -68,6 +68,7 @@ public class OrderExtension {
             } 
         }
     }
+
     /**
      * @name OnFieldChange
      * @description
@@ -90,7 +91,6 @@ public class OrderExtension {
                 pieData.add(new ChartHelper.ChartData(orderItem.Product2.Name, (orderItem.Quantity * orderItem.UnitPrice)));
             }
     	}
-
     }
 
     /**
@@ -132,9 +132,7 @@ public class OrderExtension {
             Database.rollback(sp);
             Apexpages.addMessage(new Apexpages.Message(ApexPages.Severity.INFO, Constants.ERROR_MESSAGE));
         }
-		
     }
-
 
     /**
      * @name First
@@ -145,7 +143,6 @@ public class OrderExtension {
         PopulateOrderItems();
     }
 
-
     /**
      * @name Next
      * @description
@@ -154,7 +151,6 @@ public class OrderExtension {
 		standardSetController.next();
         PopulateOrderItems();
     }
-
 
     /**
      * @name Previous
@@ -237,5 +233,4 @@ public class OrderExtension {
             WHERE Id = :orderId
         ];
     }
-
 }
