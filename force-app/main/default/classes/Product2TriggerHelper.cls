@@ -1,4 +1,4 @@
-public class Product2Helper {
+public class Product2TriggerHelper {
 
     /**
      * @name COLLABORATION_GROUP
@@ -18,31 +18,32 @@ public class Product2Helper {
      * @param List<Product2> newList
      * @param List<Product2> oldList
     **/
-    public static void AfterUpdate(List<Product2> newList, List<Product2> oldList){
-		List<Product2> needsAnnouncement = new List<Product2>();
-		Map<String, Inventory_Setting__mdt> stringToInventorySettingMetadata = new Map<String, Inventory_Setting__mdt>();
-
-        for(Inventory_Setting__mdt inventorySetting : [
-            SELECT MasterLabel, Low_Quantity_Alert__c FROM Inventory_Setting__mdt
-        ]) {
-            stringToInventorySettingMetadata.put(inventorySetting.MasterLabel, inventorySetting);
-        }
-
-        for(Product2 productInstance : newList){
-            if(productInstance.Quantity_Remaining__c <= stringToInventorySettingMetadata.get(productInstance.Family).Low_Quantity_Alert__c) {
-                needsAnnouncement.add(productInstance);
+    public static void afterUpdate(List<Product2> newList, List<Product2> oldList) {
+        List<Product2> needsAnnouncementProductList = new List<Product2>();
+    
+        Map<String, Inventory_Setting__mdt> masterLabelToInventorySettingMetadataMap = Inventory_Setting__mdt.getAll();
+    
+        for (Product2 productInstance : newList) {
+            Inventory_Setting__mdt setting = masterLabelToInventorySettingMetadataMap.get(productInstance.Family);
+    
+            if (setting != null &&
+                productInstance.Quantity_Remaining__c != null &&
+                productInstance.Quantity_Remaining__c <= setting.Low_Quantity_Alert__c) {
+                
+                needsAnnouncementProductList.add(productInstance);
             }
         }
-
-        PostAlerts(needsAnnouncement);
+    
+        postAlerts(needsAnnouncementProductList);
     }
+    
 
     /**
      * @name postAlerts
      * @description called by product2 Trigger on After Update
      * @param List<Product2> productList
     **/
-    public static void PostAlerts(List<Product2> productList){
+    public static void postAlerts(List<Product2> productList){
         List<ConnectApi.AnnouncementInput> toPost = new List<ConnectApi.AnnouncementInput>();
 
         for ( Product2 p : productList ){
@@ -60,7 +61,7 @@ public class Product2Helper {
         }
 
         AnnouncementQueueable announcementQueueable = new AnnouncementQueueable();
-        announcementQueueable.toPost = toPost;
+        announcementQueueable.announcementToPostList = toPost;
 
         System.enqueueJob(announcementQueueable);
     }

@@ -26,25 +26,16 @@ public class Product2Extension {
             List<Product2> productList = new List<Product2>();
             List<PricebookEntry> entryList = new List<PricebookEntry>();
 
-            for (ProductWrapper productWrapper : productsToInsert){
-                if(productWrapper.productRecord != null && productWrapper.pricebookEntryRecord != null){
-                    if(productWrapper.productRecord.Name != null 
-                       && productWrapper.productRecord.Family != null 
-                       && productWrapper.productRecord.Family != Constants.SELECT_ONE 
-                       && productWrapper.productRecord.Initial_Inventory__c != null 
-                       && productWrapper.pricebookEntryRecord.UnitPrice != null){
-                        
-                        productList.add(productWrapper.productRecord);
-                           
-                        PricebookEntry entry = productWrapper.pricebookEntryRecord;
-                        entry.IsActive = true;
-                        entry.Pricebook2Id = constants.STANDARD_PRICEBOOK_ID;
-
-                        entryList.add(entry);  
-                    }
-
+            for (ProductWrapper wrapper : productsToInsert) {
+                if (checkProductWrapperNullFields(wrapper)) {
+                    productList.add(wrapper.productRecord);
+    
+                    PricebookEntry entry = wrapper.pricebookEntryRecord;
+                    entry.IsActive = true;
+                    entry.Pricebook2Id = Constants.STANDARD_PRICEBOOK_ID;
+    
+                    entryList.add(entry);  
                 }
-
             }
 
             insert productList; 
@@ -86,5 +77,16 @@ public class Product2Extension {
             productRecord = new Product2(Initial_Inventory__c = 0);
             pricebookEntryRecord = new PricebookEntry(Unitprice = 0.0);
         }
-    }  
+    }
+
+    private Boolean checkProductWrapperNullFields(ProductWrapper wrapper) {
+        return wrapper != null &&
+               wrapper.productRecord != null &&
+               wrapper.pricebookEntryRecord != null &&
+               wrapper.productRecord.Name != null &&
+               wrapper.productRecord.Family != null &&
+               wrapper.productRecord.Family != Constants.SELECT_ONE &&
+               wrapper.productRecord.Initial_Inventory__c != null &&
+               wrapper.pricebookEntryRecord.UnitPrice != null;
+    }    
 }

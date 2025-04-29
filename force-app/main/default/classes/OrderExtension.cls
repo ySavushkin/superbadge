@@ -7,7 +7,7 @@ public class OrderExtension {
     public Order orderRecord {get;set;}
     public List<OrderItem> orderItemList {get;set;}
     public String selectedFamily {get;set;}
-    public List<chartHelper.chartData> pieData {get;set;}
+    public List<ChartHelper.ChartData> pieData {get;set;}
     public Decimal total {get;set;}
 
     public Map<Id,OrderItem> orderItemMap;
@@ -22,19 +22,19 @@ public class OrderExtension {
         
         loadStandardController();
         total = 0;
-    	for (OrderItem orderItem : orderRecord.OrderItems) {
-        	orderItemMap.put(orderItem.Product2Id, orderItem);
-        	total += orderItem.UnitPrice * orderItem.Quantity;
+    	for (OrderItem orderItem_i : orderRecord.OrderItems) {
+        	orderItemMap.put(orderItem_i.Product2Id, orderItem_i);
+        	total += orderItem_i.UnitPrice * orderItem_i.Quantity;
                 
-        	if(orderItem.Quantity > 0) {
+        	if(orderItem_i.Quantity > 0) {
                 if(pieData == null){
                     pieData = new List<ChartHelper.ChartData>();
                 }
-            	pieData.add(new ChartHelper.ChartData(orderItem.Product2.Name, (orderItem.Quantity * orderItem.UnitPrice)));
+            	pieData.add(new ChartHelper.ChartData(orderItem_i.Product2.Name, (orderItem_i.Quantity * orderItem_i.UnitPrice)));
         	}
     	}
 		
-		PopulateOrderItems();
+		populateOrderItems();
     }
 
     public void loadStandardController() {
@@ -47,11 +47,11 @@ public class OrderExtension {
         standardSetController.setPageSize(Constants.DEFAULT_ROWS);
     }
 
-    public void PopulateOrderItems() {
+    public void populateOrderItems() {
         orderItemList = new List<OrderItem>();
         
-        for(SObject sObj : standardSetController.getRecords()) {
-            PricebookEntry pricebookEntryInstance = (PricebookEntry) sObj;
+        for(SObject sObject_i : standardSetController.getRecords()) {
+            PricebookEntry pricebookEntryInstance = (PricebookEntry) sObject_i;
             
             if(orderItemMap.containsKey(pricebookEntryInstance.Product2Id)) {
                 orderItemList.add(orderItemMap.get(pricebookEntryInstance.Product2Id));
@@ -77,7 +77,7 @@ public class OrderExtension {
         for(OrderItem orderItem : orderItemList) {
             orderItemMap.put(orderItem.Product2Id, orderItem);
         }
-        pieData = null;
+        pieData = new List<ChartHelper.ChartData>();
     	total = 0;
         
         for (OrderItem orderItem : orderItemList) {
@@ -85,9 +85,6 @@ public class OrderExtension {
         	total += orderItem.UnitPrice * orderItem.Quantity;
             
             if(orderItem.Quantity > 0) {
-                if(pieData == null) {
-                    pieData = new List<ChartHelper.ChartData>();
-                }
                 pieData.add(new ChartHelper.ChartData(orderItem.Product2.Name, (orderItem.Quantity * orderItem.UnitPrice)));
             }
     	}
@@ -97,7 +94,7 @@ public class OrderExtension {
      * @name SelectFamily
      * @description
     **/
-    public void SelectFamily(){
+    public void selectFamily(){
         loadStandardController();
         PopulateOrderItems();
     }
@@ -106,7 +103,7 @@ public class OrderExtension {
      * @name Save
      * @description
     **/
-    public void Save(){
+    public void save(){
         System.Savepoint sp = Database.setSavepoint();
         
         try {
@@ -138,7 +135,7 @@ public class OrderExtension {
      * @name First
      * @description
     **/
-    public void First(){
+    public void first(){
 		standardSetController.first();
         PopulateOrderItems();
     }
@@ -147,7 +144,7 @@ public class OrderExtension {
      * @name Next
      * @description
     **/
-    public void Next(){
+    public void next(){
 		standardSetController.next();
         PopulateOrderItems();
     }
@@ -156,7 +153,7 @@ public class OrderExtension {
      * @name Previous
      * @description
     **/
-    public void Previous(){
+    public void previous(){
 		standardSetController.previous();
         PopulateOrderItems();
     }
@@ -165,7 +162,7 @@ public class OrderExtension {
      * @name Last
      * @description
     **/
-    public void Last(){
+    public void last(){
 		standardSetController.last();
         PopulateOrderItems();
     }
@@ -174,7 +171,7 @@ public class OrderExtension {
      * @name GetHasPrevious
      * @description
     **/
-    public Boolean GetHasPrevious(){
+    public Boolean getHasPrevious(){
         return standardSetController.getHasPrevious();
     }
 
@@ -182,7 +179,7 @@ public class OrderExtension {
      * @name GetHasNext
      * @description
     **/
-    public Boolean GetHasNext(){
+    public Boolean getHasNext(){
         return standardSetController.getHasNext();
     }
 
@@ -190,7 +187,7 @@ public class OrderExtension {
      * @name GetTotalPages
      * @description
     **/
-    public Integer GetTotalPages(){
+    public Integer getTotalPages(){
         return (Integer) Math.ceil(standardSetController.getResultSize() / (Decimal)Constants.DEFAULT_ROWS);
     }
 
@@ -198,7 +195,7 @@ public class OrderExtension {
      * @name GetPageNumber
      * @description
     **/
-    public Integer GetPageNumber(){
+    public Integer getPageNumber(){
         return standardSetController.getPageNumber();
     }
 
@@ -206,7 +203,7 @@ public class OrderExtension {
      * @name GetFamilyOptions
      * @description
     **/
-    public List<SelectOption> GetFamilyOptions(){
+    public List<SelectOption> getFamilyOptions(){
     	List<SelectOption> optionList = new List<SelectOption>();
     	optionList.add(new SelectOption(Constants.SELECT_ONE, Constants.SELECT_ONE));
     
@@ -221,14 +218,24 @@ public class OrderExtension {
      * @name QueryOrderRecord
      * @description
     **/
-    public static Order QueryOrderRecord(Id orderId){
+    public static Order queryOrderRecord(Id orderId){
         return [
-            SELECT Id, AccountId, EffectiveDate, Name, Status, Pricebook2Id,
-                (
-                    SELECT Id, OrderId, Quantity, UnitPrice, PricebookEntryId, Product2Id,
-                         Product2.Name, Product2.Family, Product2.Quantity_Remaining__c
-                    FROM OrderItems
-                )
+            SELECT Id
+            , AccountId
+            , EffectiveDate
+            , Name
+            , Status
+            , Pricebook2Id
+            , (SELECT Id
+                , OrderId
+                , Quantity
+                , UnitPrice
+                , PricebookEntryId
+                , Product2Id
+                , Product2.Name
+                , Product2.Family
+                , Product2.Quantity_Remaining__c
+              FROM OrderItems)
             FROM Order
             WHERE Id = :orderId
         ];

@@ -4,30 +4,30 @@
 **/
 public class AnnouncementQueueable implements Queueable{
 
-    public List<ConnectApi.AnnouncementInput> toPost;
+    public List<ConnectApi.AnnouncementInput> announcementToPostList;
 
 	public void execute(QueueableContext context) {
-        PostAnnouncements(toPost);       
+        postAnnouncements(announcementToPostList);       
     }
 
     /**
      * @name postAnnouncements
      * @description This method is provided for you to facilitate the Super Badge
     **/
-    public static void PostAnnouncements(List<ConnectApi.AnnouncementInput> announcements){
-        while ( announcements.size() > 0 ){
+    public static void postAnnouncements(List<ConnectApi.AnnouncementInput> announcementList){
+        while ( announcementList.size() > 0 ){
             if ( Limits.getDMLStatements() < Limits.getLimitDMLStatements() && !test.isRunningTest() ){
-                ConnectApi.AnnouncementInput a = announcements.remove(0);
-                ConnectApi.Announcements.postAnnouncement('Internal', a);
+                ConnectApi.AnnouncementInput announcement = announcementList.remove(0);
+                ConnectApi.Announcements.postAnnouncement(Constants.INTERNAL_INVENTORY_ANNOUNCEMENT, announcement);
             } else {
                 break;
             }
         }
-        if ( announcements.size() > 0 && !test.isRunningTest() ){
-            AnnouncementQueueable q = new AnnouncementQueueable();
-            q.toPost = announcements;
+        if ( announcementList.size() > 0 && !test.isRunningTest() ){
+            AnnouncementQueueable announcementQueue  = new AnnouncementQueueable();
+            announcementQueue .announcementToPostList = announcementList;
 
-            System.enqueueJob(q);
+            System.enqueueJob(announcementQueue );
         }
     }
 

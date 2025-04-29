@@ -1,10 +1,11 @@
 public without sharing class ChartHelper {
 
     @AuraEnabled
-    public static List<chartData> GetInventory(){
+    public static List<ChartData> getInventory(){
         List<ChartData> chartDataList = new List<ChartData>();
         for(AggregateResult aggregateResultInstance : [
-            SELECT SUM(Quantity_Remaining__c) remainingQuantity, Family
+            SELECT SUM(Quantity_Remaining__c) remainingQuantity
+            , Family
             FROM Product2
             WHERE IsActive = True
             GROUP BY Family
