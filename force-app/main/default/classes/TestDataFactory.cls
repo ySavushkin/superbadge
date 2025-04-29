@@ -1,14 +1,6 @@
-/**
- * @name TestDataFactory
- * @description Contains methods to construct and/or validate commonly used records
-**/
 public with sharing class TestDataFactory {
 
-    /**
-     * @name ConstructCollaborationGroup
-     * @description
-    **/
-    public static CollaborationGroup ConstructCollaborationGroup(){
+    public static CollaborationGroup constructCollaborationGroup(){
         CollaborationGroup chatterGroup = new CollaborationGroup(
             Name = 'Test '+ Constants.INVENTORY_ANNOUNCEMENTS,  
             CollaborationType = 'Public'
@@ -16,11 +8,7 @@ public with sharing class TestDataFactory {
         return chatterGroup;
     }
 
-    /**
-     * @name CreateProducts
-     * @description Constructs a list of Product2 records for unit tests
-    **/
-    public static List<Product2> ConstructProducts(Integer cnt){
+    public static List<Product2> constructProducts(Integer cnt){
         List<Product2> productList = new List<Product2>();
         
         for(Integer i = 0; i < cnt; i++){
@@ -35,11 +23,7 @@ public with sharing class TestDataFactory {
         return productList;
     }
 
-    /**
-     * @name CreatePricebookEntries
-     * @description Constructs a list of PricebookEntry records for unit tests
-    **/
-    public static List<PricebookEntry> ConstructPricebookEntries(List<Product2> prods){
+    public static List<PricebookEntry> constructPricebookEntries(List<Product2> prods){
         List<PricebookEntry> pricebookEntryList = new List<PricebookEntry>();
         
         for(Integer i = 0; i < prods.size(); i++){
@@ -54,11 +38,7 @@ public with sharing class TestDataFactory {
         return pricebookEntryList;
     }
 
-    /**
-     * @name CreateAccounts
-     * @description Constructs a list of Account records for unit tests
-    **/
-    public static List<Account> ConstructAccounts(Integer cnt){
+    public static List<Account> constructAccounts(Integer cnt){
         List<Account> accountList = new List<Account>();
         
         for(Integer i = 0; i < cnt; i++) {
@@ -70,11 +50,7 @@ public with sharing class TestDataFactory {
         return accountList;
     }
 
-    /**
-     * @name CreateContacts
-     * @description Constructs a list of Contacxt records for unit tests
-    **/
-    public static List<Contact> ConstructContacts(Integer cnt, List<Account> accts){
+    public static List<Contact> constructContacts(Integer cnt, List<Account> accts){
         List<Contact> contactList = new List<Contact>();
         
         for(Integer i = 0; i < cnt; i++) {
@@ -88,11 +64,7 @@ public with sharing class TestDataFactory {
         return contactList;
     }
 
-    /**
-     * @name CreateOrders
-     * @description Constructs a list of Order records for unit tests
-    **/
-    public static List<Order> ConstructOrders(Integer cnt, List<Account> accts){
+    public static List<Order> constructOrders(Integer cnt, List<Account> accts){
 		List<Order> orderList = new List<Order>();
         
         for(Integer i = 0; i < cnt; i++) {
@@ -108,11 +80,7 @@ public with sharing class TestDataFactory {
         return orderList;
     }
 
-    /**
-     * @name CreateOrderItems
-     * @description Constructs a list of OrderItem records for unit tests
-    **/
-    public static List<OrderItem> ConstructOrderItems(Integer cnt, List<PriceBookEntry> priceBookEntryList, List<Order> orderList){
+    public static List<OrderItem> constructOrderItems(Integer cnt, List<PriceBookEntry> priceBookEntryList, List<Order> orderList){
         List<OrderItem> orderItemList = new List<OrderItem>();
         
         for(Integer i = 0; i < cnt; i++) {
@@ -127,35 +95,31 @@ public with sharing class TestDataFactory {
         return orderItemList;
     }
 
-    /**
-     * @name SetupTestData
-     * @description Inserts accounts, contacts, Products, PricebookEntries, Orders, and OrderItems.
-    **/
-    public static void InsertTestData(Integer cnt){
+    public static void insertTestData(Integer cnt){
 
-		CollaborationGroup collaborationGroup = TestDataFactory.ConstructCollaborationGroup();
+		CollaborationGroup collaborationGroup = TestDataFactory.constructCollaborationGroup();
         insert collaborationGroup;
         
-        List<Product2> productList = TestDataFactory.ConstructProducts(cnt);
+        List<Product2> productList = TestDataFactory.constructProducts(cnt);
         insert productList;
         
-        List<PriceBookEntry> pricebookEntryList = TestDataFactory.ConstructPricebookEntries(productList);
+        List<PriceBookEntry> pricebookEntryList = TestDataFactory.constructPricebookEntries(productList);
         insert pricebookEntryList;
         
-        List<Account> accountList = TestDataFactory.ConstructAccounts(cnt);
+        List<Account> accountList = TestDataFactory.constructAccounts(cnt);
         insert accountList;
         
-        List<Contact> contactList = TestDataFactory.ConstructContacts(cnt, accountList);
+        List<Contact> contactList = TestDataFactory.constructContacts(cnt, accountList);
         insert contactList;
         
-        List<Order> orderList = TestDataFactory.ConstructOrders(cnt, accountList);
+        List<Order> orderList = TestDataFactory.constructOrders(cnt, accountList);
         insert orderList;
         
-        List<OrderItem> orderItemList = TestDataFactory.ConstructOrderItems(cnt, pricebookEntryList, orderList);
+        List<OrderItem> orderItemList = TestDataFactory.constructOrderItems(cnt, pricebookEntryList, orderList);
         insert orderItemList;
     }
     
-    public static void VerifyQuantityOrdered(Product2 originalProduct, Product2 updatedProduct, Integer quantityOrdered) {
+    public static void verifyQuantityOrdered(Product2 originalProduct, Product2 updatedProduct, Integer quantityOrdered) {
         Assert.areEqual((updatedProduct.Quantity_Ordered__c - originalProduct.Quantity_Ordered__c), quantityOrdered);
     }
 

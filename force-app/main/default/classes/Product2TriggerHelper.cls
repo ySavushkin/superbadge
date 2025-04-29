@@ -1,9 +1,5 @@
 public class Product2TriggerHelper {
 
-    /**
-     * @name COLLABORATION_GROUP
-     * @description List of CollaborationGroup used in both business and test logic
-    **/
     static List<CollaborationGroup> COLLABORATION_GROUP = [
         SELECT Id
         FROM CollaborationGroup
@@ -12,12 +8,6 @@ public class Product2TriggerHelper {
         LIMIT 1
     ];
 
-    /**
-     * @name afterUpdate
-     * @description called by product2 Trigger on After Update
-     * @param List<Product2> newList
-     * @param List<Product2> oldList
-    **/
     public static void afterUpdate(List<Product2> newList, List<Product2> oldList) {
         List<Product2> needsAnnouncementProductList = new List<Product2>();
     
@@ -26,9 +16,9 @@ public class Product2TriggerHelper {
         for (Product2 productInstance : newList) {
             Inventory_Setting__mdt setting = masterLabelToInventorySettingMetadataMap.get(productInstance.Family);
     
-            if (setting != null &&
-                productInstance.Quantity_Remaining__c != null &&
-                productInstance.Quantity_Remaining__c <= setting.Low_Quantity_Alert__c) {
+            if (setting != null 
+                && productInstance.Quantity_Remaining__c != null 
+                && productInstance.Quantity_Remaining__c <= setting.Low_Quantity_Alert__c) {
                 
                 needsAnnouncementProductList.add(productInstance);
             }
@@ -37,12 +27,6 @@ public class Product2TriggerHelper {
         postAlerts(needsAnnouncementProductList);
     }
     
-
-    /**
-     * @name postAlerts
-     * @description called by product2 Trigger on After Update
-     * @param List<Product2> productList
-    **/
     public static void postAlerts(List<Product2> productList){
         List<ConnectApi.AnnouncementInput> toPost = new List<ConnectApi.AnnouncementInput>();
 

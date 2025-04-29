@@ -7,7 +7,8 @@ public class Constants {
     public static final String ACTIVATED_ORDER_STATUS = 'Activated';
     public static final String INVENTORY_ANNOUNCEMENTS = 'Inventory Announcements';
     public static final String ERROR_MESSAGE = 'An error has occurred, please take a screenshot with the URL and send it to IT.';
-    public static Id STANDARD_PRICEBOOK_ID = getStandartPricebookId();
+    // public static Id STANDARD_PRICEBOOK_ID = getStandartPricebookId();
+    public static Id STANDARD_PRICEBOOK_ID = '01sd2000004IRHCAA4';
     public static final String INTERNAL_INVENTORY_ANNOUNCEMENT = 'Internal';
 
     public static Id getStandartPricebookId() {

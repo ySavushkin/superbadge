@@ -3,6 +3,7 @@ public without sharing class ChartHelper {
     @AuraEnabled
     public static List<ChartData> getInventory(){
         List<ChartData> chartDataList = new List<ChartData>();
+
         for(AggregateResult aggregateResultInstance : [
             SELECT SUM(Quantity_Remaining__c) remainingQuantity
             , Family
@@ -24,5 +25,4 @@ public without sharing class ChartHelper {
             this.val = val;
         }
     }
-
 }

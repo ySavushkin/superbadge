@@ -8,7 +8,7 @@ private class OrderTests {
     }
     
     @isTest
-    static void OrderUpdate_UnitTest() {
+    static void orderUpdate_UnitTest() {
         List<Product2> productList = [SELECT Id, Quantity_Ordered__c FROM Product2 LIMIT 1];
         Product2 product = productList[0];
 
@@ -24,11 +24,7 @@ private class OrderTests {
         
         TestDataFactory.VerifyQuantityOrdered(product, updatedProduct, 1);
     }
-    
-    /**
-     * @name orderExtension_UnitTest
-     * @description UnitTest for orderExtension
-    **/
+
     @isTest
     static void orderExtension_UnitTest(){
         Test.startTest();

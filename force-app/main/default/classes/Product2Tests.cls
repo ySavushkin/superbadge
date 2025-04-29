@@ -1,10 +1,6 @@
 @isTest(seeAllData=true)
 private class Product2Tests {
-
-    /**
-     * @name product2Extension_UnitTest
-     * @description UnitTest for Product2Extension
-    **/
+    
     @isTest
     static void product2Extension_UnitTest() {
         Test.startTest();
@@ -48,10 +44,6 @@ private class Product2Tests {
         System.assertEquals(1, createdProducts.size());
     }
 
-    /**
-     * @name product2Trigger_UnitTest
-     * @description UnitTest for Product2 Trigger Logic
-    **/
     @isTest
     static void product2Trigger_UnitTest() {
         

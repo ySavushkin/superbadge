@@ -9,17 +9,17 @@ public class Product2Extension {
         addRows();
     }
 
-    public void AddRows(){
+    public void addRows(){
         for ( Integer i=0; i < Constants.DEFAULT_ROWS; i++ ){
             productsToInsert.add( new ProductWrapper() );
         }
     }
 
-    public List<ChartHelper.ChartData> GetInventory(){
-        return ChartHelper.GetInventory();
+    public List<ChartHelper.ChartData> getInventory(){
+        return ChartHelper.getInventory();
     }
 
-    public PageReference Save(){
+    public PageReference save(){
         Savepoint sp = Database.setSavepoint();
 
         try {
@@ -58,7 +58,7 @@ public class Product2Extension {
         return null;
     }
     
-    public List<SelectOption> GetFamilyOptions(){
+    public List<SelectOption> getFamilyOptions(){
     	List<SelectOption> optionList = new List<SelectOption>();
     	optionList.add(new SelectOption(Constants.SELECT_ONE, Constants.SELECT_ONE));
     
@@ -80,13 +80,13 @@ public class Product2Extension {
     }
 
     private Boolean checkProductWrapperNullFields(ProductWrapper wrapper) {
-        return wrapper != null &&
-               wrapper.productRecord != null &&
-               wrapper.pricebookEntryRecord != null &&
-               wrapper.productRecord.Name != null &&
-               wrapper.productRecord.Family != null &&
-               wrapper.productRecord.Family != Constants.SELECT_ONE &&
-               wrapper.productRecord.Initial_Inventory__c != null &&
-               wrapper.pricebookEntryRecord.UnitPrice != null;
+        return wrapper != null
+            && wrapper.productRecord != null
+            && wrapper.pricebookEntryRecord != null
+            && wrapper.productRecord.Name != null
+            && wrapper.productRecord.Family != null
+            && wrapper.productRecord.Family != Constants.SELECT_ONE
+            && wrapper.productRecord.Initial_Inventory__c != null
+            && wrapper.pricebookEntryRecord.UnitPrice != null;
     }    
 }

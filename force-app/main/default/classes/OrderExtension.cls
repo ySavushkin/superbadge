@@ -1,7 +1,3 @@
-/**
- * @name OrderExtension
- * @description This class is provided for you to facilitate the Super Badge
-**/
 public class OrderExtension {
 
     public Order orderRecord {get;set;}
@@ -69,10 +65,6 @@ public class OrderExtension {
         }
     }
 
-    /**
-     * @name OnFieldChange
-     * @description
-    **/
     public void OnFieldChange(){ 
         for(OrderItem orderItem : orderItemList) {
             orderItemMap.put(orderItem.Product2Id, orderItem);
@@ -90,19 +82,11 @@ public class OrderExtension {
     	}
     }
 
-    /**
-     * @name SelectFamily
-     * @description
-    **/
     public void selectFamily(){
         loadStandardController();
         PopulateOrderItems();
     }
 
-    /**
-     * @name Save
-     * @description
-    **/
     public void save(){
         System.Savepoint sp = Database.setSavepoint();
         
@@ -131,78 +115,42 @@ public class OrderExtension {
         }
     }
 
-    /**
-     * @name First
-     * @description
-    **/
     public void first(){
 		standardSetController.first();
         PopulateOrderItems();
     }
 
-    /**
-     * @name Next
-     * @description
-    **/
     public void next(){
 		standardSetController.next();
         PopulateOrderItems();
     }
 
-    /**
-     * @name Previous
-     * @description
-    **/
     public void previous(){
 		standardSetController.previous();
         PopulateOrderItems();
     }
 
-    /**
-     * @name Last
-     * @description
-    **/
     public void last(){
 		standardSetController.last();
         PopulateOrderItems();
     }
 
-    /**
-     * @name GetHasPrevious
-     * @description
-    **/
     public Boolean getHasPrevious(){
         return standardSetController.getHasPrevious();
     }
 
-    /**
-     * @name GetHasNext
-     * @description
-    **/
     public Boolean getHasNext(){
         return standardSetController.getHasNext();
     }
 
-    /**
-     * @name GetTotalPages
-     * @description
-    **/
     public Integer getTotalPages(){
         return (Integer) Math.ceil(standardSetController.getResultSize() / (Decimal)Constants.DEFAULT_ROWS);
     }
 
-    /**
-     * @name GetPageNumber
-     * @description
-    **/
     public Integer getPageNumber(){
         return standardSetController.getPageNumber();
     }
 
-    /**
-     * @name GetFamilyOptions
-     * @description
-    **/
     public List<SelectOption> getFamilyOptions(){
     	List<SelectOption> optionList = new List<SelectOption>();
     	optionList.add(new SelectOption(Constants.SELECT_ONE, Constants.SELECT_ONE));
@@ -214,10 +162,6 @@ public class OrderExtension {
     	return optionList;
 	}
 
-    /**
-     * @name QueryOrderRecord
-     * @description
-    **/
     public static Order queryOrderRecord(Id orderId){
         return [
             SELECT Id
